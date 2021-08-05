@@ -1,0 +1,691 @@
+package numbers;
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        System.out.println("Welcome to Amazing Numbers!\n");
+        supportedRequests();
+        while (true) {
+            System.out.print("\n\nEnter a request: > ");
+            try {
+                String[] in = new Scanner(System.in).nextLine().split(" ");
+                if (in[0].equals("")) {
+                    System.out.println();
+                    supportedRequests();
+                } else if (in[0].equals("0")) {
+                    System.out.println("\nGoodbye!");
+                    break;
+                } else {
+                    long[] numbers = getNumbers(in);
+                    if (numbers.length == 1 && numbers[0] > 0) {
+                        ifOneNumber(in);
+                    } else if (numbers.length == 2) {
+                        try {
+                            ifTwoNumbers(in);
+                        } catch (NumberFormatException e) {
+                            System.out.print("");
+                        }
+                    } else if (numbers.length == 3) {
+                        try {
+                            ifTwoNumbersAndProperty(in);
+                        } catch (NumberFormatException e) {
+                            System.out.println();
+                            supportedRequests();
+                        }
+                    } else if (numbers.length > 3) {
+                        try {
+                            ifTwoNumbersAndTwoProperties(in);
+                        } catch (Exception e) {
+                            System.out.println();
+                            supportedRequests();
+                        }
+                    }
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println();
+                supportedRequests();
+            }
+        }
+    }
+
+    public static void supportedRequests() {
+        System.out.print("Supported requests:\n" +
+                "- enter a natural number to know its properties;\n" +
+                "- enter two natural numbers to obtain the properties of the list:\n" +
+                "  * the first parameter represents a starting number;\n" +
+                "  * the second parameter shows how many consecutive numbers are to be printed;\n" +
+                "- two natural numbers and properties to search for;\n" +
+                "- a property preceded by minus must not be present in numbers;\n" +
+                "- separate the parameters with one space;\n" +
+                "- enter 0 to exit.");
+    }
+
+    public static void ifOneNumber(String[] in) {
+        long[] numbers = getNumbers(in);
+        System.out.print("\nProperties of " + numbers[0] +
+                "\n        buzz: " + buzzChecker(numbers[0]) +
+                "\n        duck: " + duckChecker(numbers[0]) +
+                "\n palindromic: " + palindromic(numbers[0]) +
+                "\n      gapful: " + gapful(numbers[0]) +
+                "\n         spy: " + spy(numbers[0]) +
+                "\n      square: " + square(numbers[0]) +
+                "\n       sunny: " + sunny(numbers[0]) +
+                "\n     jumping: " + jumping(numbers[0]) +
+                "\n       happy: " + happy(numbers[0]) +
+                "\n         sad: " + !happy(numbers[0]) +
+                "\n        even: " + even(numbers[0]) +
+                "\n         odd: " + !even(numbers[0]));
+    }
+
+    public static void ifTwoNumbers(String[] in) {
+        if (Long.parseLong(in[0]) > 0 && Long.parseLong(in[1]) > 0) {
+            long[] numbers = new long[Integer.parseInt(in[1])];
+            for (int i = 0; i < Integer.parseInt(in[1]); i++) {
+                numbers[i] = Long.parseLong(in[0]) + i;
+                System.out.print("\n" + numbers[i] + " is ");
+                printProperty(numbers[i]);
+            }
+        }
+    }
+
+    public static void ifTwoNumbersAndProperty(String[] in) {
+        long startNumber = Long.parseLong(in[0]);
+        int amountOfNumbers = Integer.parseInt(in[1]);
+        String property = in[2];
+        int counter = 0;
+        boolean wrongProperty = false;
+
+        long[] numbers = new long[amountOfNumbers];
+
+        while (counter < amountOfNumbers && !wrongProperty) {
+            switch (property.toUpperCase()) {
+                case "BUZZ":
+                    if (buzzChecker(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "-BUZZ":
+                    if (!buzzChecker(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "DUCK":
+                    if (duckChecker(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "-DUCK":
+                    if (!duckChecker(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "PALINDROMIC":
+                    if (palindromic(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "-PALINDROMIC":
+                    if (!palindromic(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "GAPFUL":
+                    if (gapful(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "-GAPFUL":
+                    if (!gapful(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "SPY":
+                    if (spy(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "-SPY":
+                    if (!spy(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "SQUARE":
+                    if (square(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "-SQUARE":
+                    if (!square(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "SUNNY":
+                    if (sunny(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "-SUNNY":
+                    if (!sunny(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "JUMPING":
+                    if (jumping(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "-JUMPING":
+                    if (!jumping(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "HAPPY":
+                case "-SAD":
+                    if (happy(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "SAD":
+                case "-HAPPY":
+                    if (!happy(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "EVEN":
+                case "-ODD":
+                    if (even(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                case "ODD":
+                case "-EVEN":
+                    if (!even(startNumber)) {
+                        numbers[counter] = startNumber;
+                        counter++;
+                    }
+                    break;
+                default:
+                    System.out.print("\nThe property [" + property.toUpperCase() + "] is wrong.\n" +
+                            "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, JUMPING, HAPPY, SAD]");
+                    wrongProperty = true;
+                    break;
+            }
+            startNumber++;
+        }
+        if (!wrongProperty) {
+            for (long number : numbers) {
+                System.out.print("\n" + number + " is ");
+                printProperty(number);
+            }
+        }
+    }
+
+    public static void ifTwoNumbersAndTwoProperties(String[] in) {
+        long startNumber = Long.parseLong(in[0]);
+        int amountOfNumbers = Integer.parseInt(in[1]);
+        int counter = 0;
+        int counter1 = 0;
+        int counter2 = 0;
+        boolean even = false;
+        boolean odd = false;
+        boolean duck = false;
+        boolean spy = false;
+        boolean square = false;
+        boolean sunny = false;
+        boolean happy = false;
+        boolean sad = false;
+        boolean buzz = false;
+        boolean palindromic = false;
+        boolean gapful = false;
+        boolean jumping = false;
+        boolean even1 = false;
+        boolean odd1 = false;
+        boolean duck1 = false;
+        boolean spy1 = false;
+        boolean square1 = false;
+        boolean sunny1 = false;
+        boolean happy1 = false;
+        boolean sad1 = false;
+        boolean buzz1 = false;
+        boolean palindromic1 = false;
+        boolean gapful1 = false;
+        boolean jumping1 = false;
+        boolean wrongProperties = false;
+        String[] available = new String[]{"EVEN", "ODD", "BUZZ", "DUCK", "PALINDROMIC", "GAPFUL", "SPY", "SQUARE",
+                "JUMPING", "SUNNY", "HAPPY", "SAD", "-EVEN", "-ODD", "-BUZZ", "-DUCK", "-PALINDROMIC", "-GAPFUL",
+                "-SPY", "-SQUARE", "-JUMPING", "-SUNNY", "-HAPPY", "-SAD"};
+        StringBuilder wrongPropertiesSB = new StringBuilder();
+        long[] numbers = new long[amountOfNumbers];
+        for (int i = 2; i < in.length; i++) {
+            if (!Arrays.asList(available).contains(in[i].toUpperCase())) {
+                counter2++;
+            }
+            wrongPropertiesSB.append(in[i]).append(", ");
+        }
+        String wrongPropertiesStr = wrongPropertiesSB.delete(wrongPropertiesSB.length() - 2, wrongPropertiesSB.length()).toString();
+        for (int i = 2; i < in.length; i++) {
+            if (in[i].equalsIgnoreCase("EVEN")) {
+                even = true;
+            }
+            if (in[i].equalsIgnoreCase("ODD")) {
+                odd = true;
+            }
+            if (in[i].equalsIgnoreCase("DUCK")) {
+                duck = true;
+            }
+            if (in[i].equalsIgnoreCase("SPY")) {
+                spy = true;
+            }
+            if (in[i].equalsIgnoreCase("SQUARE")) {
+                square = true;
+            }
+            if (in[i].equalsIgnoreCase("SUNNY")) {
+                sunny = true;
+            }
+            if (in[i].equalsIgnoreCase("HAPPY")) {
+                happy = true;
+            }
+            if (in[i].equalsIgnoreCase("SAD")) {
+                sad = true;
+            }
+            if (in[i].equalsIgnoreCase("-EVEN")) {
+                even1 = true;
+            }
+            if (in[i].equalsIgnoreCase("-ODD")) {
+                odd1 = true;
+            }
+            if (in[i].equalsIgnoreCase("-DUCK")) {
+                duck1 = true;
+            }
+            if (in[i].equalsIgnoreCase("-SPY")) {
+                spy1 = true;
+            }
+            if (in[i].equalsIgnoreCase("-SQUARE")) {
+                square1 = true;
+            }
+            if (in[i].equalsIgnoreCase("-SUNNY")) {
+                sunny1 = true;
+            }
+            if (in[i].equalsIgnoreCase("-HAPPY")) {
+                happy1 = true;
+            }
+            if (in[i].equalsIgnoreCase("-SAD")) {
+                sad1 = true;
+            }
+            if (in[i].equalsIgnoreCase("BUZZ")) {
+                buzz = true;
+            }
+            if (in[i].equalsIgnoreCase("-BUZZ")) {
+                buzz1 = true;
+            }
+            if (in[i].equalsIgnoreCase("PALINDROMIC")) {
+                palindromic = true;
+            }
+            if (in[i].equalsIgnoreCase("-PALINDROMIC")) {
+                palindromic1 = true;
+            }
+            if (in[i].equalsIgnoreCase("GAPFUL")) {
+                gapful = true;
+            }
+            if (in[i].equalsIgnoreCase("-GAPFUL")) {
+                gapful1 = true;
+            }
+            if (in[i].equalsIgnoreCase("JUMPING")) {
+                jumping = true;
+            }
+            if (in[i].equalsIgnoreCase("-JUMPING")) {
+                jumping1 = true;
+            }
+        }
+        if (even && odd) {
+            System.out.print("\nThe request contains mutually exclusive properties: [EVEN, ODD]\n" +
+                    "There are no numbers with these properties.");
+        } else if (duck && spy) {
+            System.out.print("\nThe request contains mutually exclusive properties: [DUCK, SPY]\n" +
+                    "There are no numbers with these properties.");
+        } else if (square && sunny) {
+            System.out.print("\nThe request contains mutually exclusive properties: [SQUARE, SUNNY]\n" +
+                    "There are no numbers with these properties.");
+        } else if (happy && sad) {
+            System.out.print("\nThe request contains mutually exclusive properties: [HAPPY, SAD]\n" +
+                    "There are no numbers with these properties.");
+        } else if (even1 && odd1) {
+            System.out.print("\nThe request contains mutually exclusive properties: [-EVEN, -ODD]\n" +
+                    "There are no numbers with these properties.");
+        } else if (duck1 && spy1) {
+            System.out.print("\nThe request contains mutually exclusive properties: [-DUCK, -SPY]\n" +
+                    "There are no numbers with these properties.");
+        } else if (happy1 && sad1) {
+            System.out.print("\nThe request contains mutually exclusive properties: [-HAPPY, -SAD]\n" +
+                    "There are no numbers with these properties.");
+        } else if (happy && sad1) {
+            System.out.print("\nThe request contains mutually exclusive properties: [HAPPY, -SAD]\n" +
+                    "There are no numbers with these properties.");
+        } else if (even1 && even) {
+            System.out.print("\nThe request contains mutually exclusive properties: [-EVEN, EVEN]\n" +
+                    "There are no numbers with these properties.");
+        } else if (duck1 && duck) {
+            System.out.print("\nThe request contains mutually exclusive properties: [-DUCK, DUCK]\n" +
+                    "There are no numbers with these properties.");
+        } else if (square1 && square) {
+            System.out.print("\nThe request contains mutually exclusive properties: [-SQUARE, SQUARE]\n" +
+                    "There are no numbers with these properties.");
+        } else if (happy1 && happy) {
+            System.out.print("\nThe request contains mutually exclusive properties: [-HAPPY, HAPPY]\n" +
+                    "There are no numbers with these properties.");
+        } else if (odd && odd1) {
+            System.out.print("\nThe request contains mutually exclusive properties: [ODD, -ODD]\n" +
+                    "There are no numbers with these properties.");
+        } else if (spy && spy1) {
+            System.out.print("\nThe request contains mutually exclusive properties: [SPY, -SPY]\n" +
+                    "There are no numbers with these properties.");
+        } else if (sunny && sunny1) {
+            System.out.print("\nThe request contains mutually exclusive properties: [SUNNY, -SUNNY]\n" +
+                    "There are no numbers with these properties.");
+        } else if (sad && sad1) {
+            System.out.print("\nThe request contains mutually exclusive properties: [SAD, -SAD]\n" +
+                    "There are no numbers with these properties.");
+        } else if (happy1 && sad) {
+            System.out.print("\nThe request contains mutually exclusive properties: [-HAPPY, SAD]\n" +
+                    "There are no numbers with these properties.");
+        } else if (buzz && buzz1) {
+            System.out.print("\nThe request contains mutually exclusive properties: [-BUZZ, BUZZ]\n" +
+                    "There are no numbers with these properties.");
+        } else if (palindromic && palindromic1) {
+            System.out.print("\nThe request contains mutually exclusive properties: [-PALINDROMIC, PALINDROMIC]\n" +
+                    "There are no numbers with these properties.");
+        } else if (gapful && gapful1) {
+            System.out.print("\nThe request contains mutually exclusive properties: [-GAPFUL, GAPFUL]\n" +
+                    "There are no numbers with these properties.");
+        } else if (jumping && jumping1) {
+            System.out.print("\nThe request contains mutually exclusive properties: [-JUMPING, JUMPING]\n" +
+                    "There are no numbers with these properties.");
+        } else if (counter2 == in.length - 2) {
+            System.out.print("\nThe properties [" + wrongPropertiesStr.toUpperCase() + "] are wrong.\n" +
+                    "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, JUMPING, HAPPY, SAD]");
+        } else {
+            while (counter < amountOfNumbers && !wrongProperties) {
+                for (int i = 2; i < in.length; i++) {
+                    switch (in[i].toUpperCase()) {
+                        case "BUZZ":
+                            if (buzzChecker(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "-BUZZ":
+                            if (!buzzChecker(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "DUCK":
+                            if (duckChecker(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "-DUCK":
+                            if (!duckChecker(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "PALINDROMIC":
+                            if (palindromic(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "-PALINDROMIC":
+                            if (!palindromic(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "GAPFUL":
+                            if (gapful(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "-GAPFUL":
+                            if (!gapful(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "SPY":
+                            if (spy(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "-SPY":
+                            if (!spy(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "SQUARE":
+                            if (square(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "-SQUARE":
+                            if (!square(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "SUNNY":
+                            if (sunny(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "-SUNNY":
+                            if (!sunny(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "JUMPING":
+                            if (jumping(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "-JUMPING":
+                            if (!jumping(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "HAPPY":
+                        case "-SAD":
+                            if (happy(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "SAD":
+                        case "-HAPPY":
+                            if (!happy(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "EVEN":
+                        case "-ODD":
+                            if (even(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        case "ODD":
+                        case "-EVEN":
+                            if (!even(startNumber)) {
+                                counter1++;
+                            }
+                            break;
+                        default:
+                            System.out.print("\nThe property [" + in[i].toUpperCase() + "] is wrong.\n" +
+                                    "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, JUMPING, HAPPY, SAD]");
+                            wrongProperties = true;
+                            break;
+                    }
+                }
+                if (counter1 == in.length - 2) {
+                    numbers[counter] = startNumber;
+                    counter++;
+                }
+                counter1 = 0;
+                startNumber++;
+            }
+            if (!wrongProperties) {
+                for (long number : numbers) {
+                    System.out.print("\n" + number + " is ");
+                    printProperty(number);
+                }
+            }
+        }
+    }
+
+    public static void printProperty(long number) {
+        String sb = (buzzChecker(number) ? "buzz, " : "") + (duckChecker(number) ? "duck, " : "") +
+                (palindromic(number) ? "palindromic, " : "") + (gapful(number) ? "gapful, " : "") +
+                (spy(number) ? "spy, " : "") + (square(number) ? "square, " : "") + (sunny(number) ? "sunny, " : "") +
+                (jumping(number) ? "jumping, " : "") + (happy(number) ? "happy, " : "") +
+                (!happy(number) ? "sad, " : "") + (even(number) ? "even" : "") + (!even(number) ? "odd" : "");
+        System.out.print(sb);
+    }
+
+    public static long[] getNumbers(String[] in) {
+        long[] listOfNumbers = new long[in.length];
+        if (in.length == 1) {
+            try {
+                listOfNumbers[0] = Long.parseLong(in[0]);
+                if (Long.parseLong(in[0]) < 0) {
+                    System.out.print("\nThe first parameter should be a natural number or zero.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.print("\nThe first parameter should be a natural number or zero.");
+            }
+        } else if (in.length == 2) {
+            try {
+                listOfNumbers[0] = Long.parseLong(in[0]);
+                if (Long.parseLong(in[0]) < 0) {
+                    System.out.print("\nThe first parameter should be a natural number or zero.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.print("\nThe first parameter should be a natural number or zero.");
+            }
+            try {
+                listOfNumbers[1] = Long.parseLong(in[1]);
+                if (Long.parseLong(in[1]) <= 0) {
+                    System.out.print("\nThe second parameter should be a natural number.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.print("\nThe second parameter should be a natural number.");
+            }
+        }
+        return listOfNumbers;
+    }
+
+    public static boolean buzzChecker(long number) {
+        return number % 7 == 0 || number % 10 == 7;
+    }
+
+    public static boolean duckChecker(long number) {
+        while (number != 0) {
+            if (number % 10 == 0) {
+                return true;
+            }
+            number /= 10;
+        }
+        return false;
+    }
+
+    public static boolean palindromic(long number) {
+        long reversedNumber = 0;
+        long remainder;
+        long num = number;
+        while (num != 0) {
+            remainder = num % 10;
+            reversedNumber = reversedNumber * 10 + remainder;
+            num /= 10;
+        }
+        return number == reversedNumber;
+    }
+
+    public static boolean gapful(long number) {
+        if (number > 99) {
+            long firstDigit = number;
+            while (firstDigit >= 10) {
+                firstDigit /= 10;
+            }
+            long lastDigit = number;
+            lastDigit = lastDigit % 10;
+            return number % (firstDigit * 10 + lastDigit) == 0;
+        }
+        return false;
+    }
+
+    public static boolean spy(long number) {
+        long sum = 0;
+        long product = 1;
+        while (number > 0) {
+            sum += number % 10;
+            product *= number % 10;
+            number /= 10;
+        }
+        return sum == product;
+    }
+
+    public static boolean square(long number) {
+        long check = (long) Math.sqrt(number);
+        return Math.pow(check, 2) == number;
+    }
+
+    public static boolean sunny(long number) {
+        return square(number + 1);
+    }
+
+    public static boolean jumping(long number) {
+        long digit1;
+        long digit2;
+        boolean result = true;
+        while (number > 9) {
+            digit1 = number % 10;
+            number = number / 10;
+            digit2 = number % 10;
+            if (Math.abs(digit1 - digit2) != 1) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public static boolean happy(long number) {
+        long result = 0;
+        while (number != 1 && number != 4) {
+            while (number > 0) {
+                result += Math.pow(number % 10, 2);
+                number /= 10;
+            }
+            number = result;
+            result = 0;
+        }
+        return number == 1;
+    }
+
+    public static boolean even(long number) {
+        return number % 2 == 0;
+    }
+}
